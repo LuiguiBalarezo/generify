@@ -11,10 +11,10 @@ buildscript {
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
-apply plugin: 'nexus'
+apply plugin: 'signing'
 
 group = 'com.tomreznik.generify'
-version = '0.1.0-SNAPSHOT'
+version = '0.1.0'
 
 dependencies {
     repositories {
@@ -26,44 +26,73 @@ dependencies {
     compile 'com.android.tools.build:gradle:0.14.+'
 }
 
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = 'gradle-plugin'
-    }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.artifactId = 'gradle-plugin'
-    }
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
 }
 
-modifyPom {
-    project {
-        name 'Generify'
-        description 'Gradle plugin for Android which enables usage of Java generics in XML layouts.'
-        url 'https://github.com/tomxor/generify'
-        inceptionYear '2014'
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
 
-        scm {
-            url 'https://github.com/tomxor/generify'
-            connection 'scm:git:git://github.com/tomxor/generify.git'
-            developerConnection 'scm:git:ssh://git@github.com/tomxor/generify.git'
-        }
+if (project.hasProperty('sonatype.username') && project.hasProperty('sonatype.password')) {
+    signing {
+        sign configurations.archives
+    }
 
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { deployment -> signing.signPom(deployment) }
 
-        developers {
-            developer {
-                id 'tomxor'
-                name 'Tom Reznik'
-                email 'xoreznik@gmail.com'
+                def repoUrl
+                if (project.version.endsWith("SNAPSHOT")) {
+                    repoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+                } else {
+                    repoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                }
+
+                repository(url: repoUrl) {
+                    authentication(
+                        userName: project.getProperty('sonatype.username'),
+                        password: project.getProperty('sonatype.password'))
+                }
+
+                pom.project {
+                    name 'Generify'
+                    packaging 'jar'
+                    description 'Gradle plugin for Android which enables usage of Java generics in XML layouts.'
+                    url 'https://github.com/tomxor/generify'
+
+                    scm {
+                        url 'https://github.com/tomxor/generify'
+                        connection 'scm:git:git://github.com/tomxor/generify.git'
+                        developerConnection 'scm:git:ssh://git@github.com/tomxor/generify.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'tomreznik'
+                            name 'Tom Reznik'
+                            email 'xoreznik@gmail.com'
+                        }
+                    }
+                }
             }
         }
     }
