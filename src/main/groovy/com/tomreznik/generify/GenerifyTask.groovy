@@ -112,9 +112,17 @@ class GenerifyTask extends DefaultTask {
   }
 
   def injectClass(Node node, String genericType) {
-    def fqClassName = "${node.name()}_${genericType.replace(',', '_').replace(' ', '')}"
-    def inject = injections.get(fqClassName)
+    def suffix = genericType.replace(',', '_')
+        .replace(' ', '')
+        .replace('(', '_')
+        .replace(')', '_')
+        .replace('.', '_')
 
+    if (suffix.charAt(suffix.length() - 1) == '_') {
+      suffix = suffix.subSequence(0, suffix.length() - 1)
+    }
+    def fqClassName = "${node.name()}_${suffix}"
+    def inject = injections.get(fqClassName)
     if (inject != null) {
       return
     }
@@ -133,7 +141,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import ${node.name()};
 
-public class ${classNameShort} extends ${parentNameShort}<${genericType}> {
+public class ${classNameShort} extends ${parentNameShort}<${genericType.replace('(', '<').replace(')', '>')}> {
   public ${classNameShort}(Context context, AttributeSet attrs) {
     super(context, attrs);
   }

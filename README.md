@@ -58,6 +58,24 @@ public class AwesomeViewString extends AwesomeView<String> {
 
 In addition, your XML references to these views will automatically be replaced with the generated ones.
 
+Multiple types:
+
+```xml
+<com.package.name.SomeView
+    app:generic_type="String,Integer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+```
+
+Nested types:
+
+```xml
+<com.package.name.SomeView
+    app:generic_type="java.util.List(String)"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+```
+
 License
 -------
 
