@@ -112,7 +112,7 @@ class GenerifyTask extends DefaultTask {
   }
 
   def injectClass(Node node, String genericType) {
-    def fqClassName = "${node.name()}${genericType}"
+    def fqClassName = "${node.name()}_${genericType.replace(',', '_').replace(' ', '')}"
     def inject = injections.get(fqClassName)
 
     if (inject != null) {
