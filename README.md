@@ -58,7 +58,7 @@ public class AwesomeViewString extends AwesomeView<String> {
 
 In addition, your XML references to these views will automatically be replaced with the generated ones.
 
-Multiple types:
+#### Multiple types:
 
 ```xml
 <com.package.name.SomeView
@@ -67,7 +67,7 @@ Multiple types:
     android:layout_height="wrap_content"/>
 ```
 
-Nested types:
+#### Nested types:
 
 ```xml
 <com.package.name.SomeView
