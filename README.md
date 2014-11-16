@@ -35,17 +35,11 @@ public class AwesomeView<T> extends TextView {
 Using Generify, all you have to do is include your app's namespace and provide a `generic_type` expression, for example:
 
 ```xml
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.package.name.AwesomeView
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-  <com.package.name.AwesomeView
-      app:generic_type="String"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
-
-</FrameLayout>
+    app:generic_type="String"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
 ```
 
 At compile time, this plugin will generate a subclass of `AwesomeView` while hard-coding the generic expression:
