@@ -1,6 +1,8 @@
 Generify
 ========
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Generify-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/1148)
+
 Gradle plugin for Android which lets you use Java generics in your XML layouts.
 
 Usage
